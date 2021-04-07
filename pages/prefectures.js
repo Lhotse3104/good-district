@@ -21,7 +21,7 @@ const Prefectures = () => {
 
 	const requestCity = async (preCode) => {
 		try{
-			const res = await axios('/api/v1/cities?prefCode='+preCode,{
+			const res = await axios('https://opendata.resas-portal.go.jp/api/v1/cities?prefCode='+preCode,{
 				headers:{ 'X-API-KEY': 'CVOkbeaEzBIagVaey2hxjWizntOlmHM3ZtC8OwFd'}
 			})
 			console.log(res.data)
