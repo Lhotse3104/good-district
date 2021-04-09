@@ -21,6 +21,11 @@ const Home = () => {
       id:'iwate'
     },
     {
+      preCode:'4',
+      name:'宮城',
+      id:'miyagi'
+    },
+    {
       preCode:'5',
       name:'秋田',
       id:'akita'
@@ -31,11 +36,6 @@ const Home = () => {
       id:'yamagata'
     },
     {
-      preCode:'4',
-      name:'宮城',
-      id:'miyagi'
-    },
-    {
       preCode:'7',
       name:'福島',
       id:'fukushima'
@@ -43,9 +43,9 @@ const Home = () => {
   ]
   const KANTOU = [
     {
-      preCode:'10',
-      name:'群馬',
-      id:'gunma',
+      preCode:'8',
+      name:'茨城',
+      id:'ibaraki'
     },
     {
       preCode:'9',
@@ -53,9 +53,9 @@ const Home = () => {
       id:'tochigi'
     },
     {
-      preCode:'8',
-      name:'茨城',
-      id:'ibaraki'
+      preCode:'10',
+      name:'群馬',
+      id:'gunma',
     },
     {
       preCode:'11',
@@ -100,6 +100,11 @@ const Home = () => {
       id:'fukui'
     },
     {
+      preCode:'19',
+      name:'山梨',
+      id:'yamanashi'
+    },
+    {
       preCode:'20',
       name:'長野',
       id:'nagano'
@@ -110,26 +115,21 @@ const Home = () => {
       id:'gifu'
     },
     {
-      preCode:'19',
-      name:'山梨',
-      id:'yamanashi'
+      preCode:'22',
+      name:'静岡',
+      id:'shizuoka'
     },
     {
       preCode:'23',
       name:'愛知',
       id:'aichi'
     },
-    {
-      preCode:'22',
-      name:'静岡',
-      id:'shizuoka'
-    },
   ]
   const KINKI = [
     {
-      preCode:'26',
-      name:'京都',
-      id:'kyoto',
+      preCode:'24',
+      name:'三重',
+      id:'mie'
     },
     {
       preCode:'25',
@@ -137,9 +137,19 @@ const Home = () => {
       id:'shiga'
     },
     {
+      preCode:'26',
+      name:'京都',
+      id:'kyoto',
+    },
+    {
       preCode:'27',
       name:'大阪',
       id:'osaka'
+    },
+    {
+      preCode:'28',
+      name:'兵庫',
+      id:'hyougo'
     },
     {
       preCode:'29',
@@ -147,19 +157,9 @@ const Home = () => {
       id:'nara'
     },
     {
-      preCode:'24',
-      name:'三重',
-      id:'mie'
-    },
-    {
       preCode:'30',
       name:'和歌山',
       id:'wakayama'
-    },
-    {
-      preCode:'28',
-      name:'兵庫',
-      id:'hyougo'
     },
   ]
   const TYUGOKU = [
@@ -341,7 +341,7 @@ const Home = () => {
               TYUGOKU.map((prefecture,i)=>{
                 const index = i+1+HOKKAIDOU_TOUHOKU.length+KANTOU.length+TYUBU.length+KINKI.length
                 return(
-                  <Link key={index} href={PREFECTURES+prefecture.preCpde}>
+                  <Link key={index} href={PREFECTURES+prefecture.preCode}>
                     <a>
                       <div className={styles[prefecture.id]}>
                         <p>{prefecture.name}</p>
@@ -377,7 +377,7 @@ const Home = () => {
         <div className={styles.kyusyu + " " + styles.clearfix}>
           <p className={styles.area_title}>九州・沖縄</p>
           <div className={styles.area}>
-          {
+            {
               KYUSYU.map((prefecture,i)=>{
                 const index = i+1+HOKKAIDOU_TOUHOKU.length+KANTOU.length+TYUBU.length+KINKI.length+TYUGOKU.length+SHIKOKU.length
                 return(

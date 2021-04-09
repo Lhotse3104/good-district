@@ -1,16 +1,26 @@
 .container {
-	min-height: 100vh;
-	padding: 0 0.5rem;
+	max-width: 35rem;
+	margin: 2rem auto;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 }
 
-.table{
-	margin-bottom: 0rem;
-}
-
 .header{
 	background-color: #fafafa;
+}
+
+
+.iconbutton{
+	background-color:rgba(0,0,0,0);
+	border-style: none;
+}
+
+
+
+@media screen and (max-width: 500px) {
+	.table td, .table th{
+		padding: .25rem;
+	}
 }
