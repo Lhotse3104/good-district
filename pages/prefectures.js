@@ -7,16 +7,72 @@ import { firebaseDb } from '../firebase/index.js'
 
 const Prefectures = () => {
   const [cityData, setCityData] = useState([])
+	const [activeState, setActiveState] = useState([])
 	const router = useRouter();
 	// パスパラメータから値を取得
 	const { preCode } = router.query;
+	const localStgId = 'good-district' + preCode
 	
 	const countUp = (index, type) =>{
-		const copycity = [...cityData]
-		copycity[index][type]++
-		firebaseDb.ref(preCode).set(copycity);
-		setCityData(copycity)
+		const localStgId = cityData[index]['citycode']+type
+		if ((localStorage.getItem(localStgId) === null)) {
+			localStorage.setItem(localStgId, true);
+			const copycity = [...cityData]
+			copycity[index][type]++
+			firebaseDb.ref(preCode).set(copycity);
+			setCityData(copycity)
+		} else {
+				window.alert('１市町村に対して１回押すことができます')
+		}
 	}
+
+	const setGood = (index) => {
+		const copyData = [...cityData]
+		const copyState = [...activeState]
+		copyData[index].good = copyState[index].goodactive ? copyData[index].good - 1 : copyData[index].good + 1
+		copyState[index].goodactive =  !copyState[index].goodactive
+		firebaseDb.ref(preCode).set(copyData);
+		setCityData(copyData)
+		localStorage.setItem(localStgId, JSON.stringify(copyState));
+		setActiveState(copyState)
+	}
+
+	const setBad = (index) => {
+		const copyData = [...cityData]
+		const copyState = [...activeState]
+		copyData[index].bad = copyState[index].badactive ? copyData[index].bad - 1 : copyData[index].bad + 1
+		copyState[index].badactive =  !copyState[index].badactive
+		firebaseDb.ref(preCode).set(copyData);
+		setCityData(copyData)
+		localStorage.setItem(localStgId, JSON.stringify(copyState));
+		setActiveState(copyState)
+	}
+
+	const setGoodBad = (index, type) => {
+		const copyData = [...cityData]
+		const copyState = [...activeState]
+		copyData[index][type] = copyState[index][type+'active'] ? copyData[index][type] - 1 : copyData[index][type] + 1
+		copyState[index][type+'active'] =  !copyState[index][type+'active']
+		firebaseDb.ref(preCode).set(copyData);
+		setCityData(copyData)
+		localStorage.setItem(localStgId, JSON.stringify(copyState));
+		setActiveState(copyState)
+	}
+
+	const handleLike = (index) => {
+		setGoodBad(index,'good')
+    if (activeState[index].badactive) {
+      setGoodBad(index,'bad')
+    }
+  }
+
+  const handleDislike = (index) => {
+		setGoodBad(index,'bad')
+    if (activeState[index].goodactive) {
+      setGoodBad(index,'good')
+    }
+  }
+
 
 	useEffect(() => {
 		// const f = async() =>{
@@ -25,8 +81,20 @@ const Prefectures = () => {
 		// }
 		firebaseDb.ref(preCode).on("value", (data)=> {
 			if (data) {
-				const listCity = data.val();
-				setCityData(listCity)
+				//console.log(localStorage.getItem(localStgId))
+				if ((localStorage.getItem(localStgId) === null)) {
+					const actives = data.val().map(()=>{
+						return(
+							{goodactive:false, badactive:false}
+						)
+					})
+					setActiveState(actives)
+				}
+				else
+				{
+					setActiveState(JSON.parse(localStorage.getItem(localStgId)))
+				}
+				setCityData(data.val())
 			}
 		});
 	},[])
@@ -64,11 +132,11 @@ const Prefectures = () => {
                   <th>{city.citycode}</th>
                   <th>{city.name}</th>
                   <th>
-										<button className={prefectures.iconbutton} onClick={()=>countUp(index,'good')}>👍</button>
-										<span>{' '+city.good}</span></th>
+										<button className={activeState[index].goodactive ? prefectures.iconbutton_on : prefectures.iconbutton_off} onClick={()=>handleLike(index)}>👍</button>
+										<span className={activeState[index].goodactive ? prefectures.count_good : prefectures.count_off}>{''+city.good}</span></th>
                   <th>
-										<button className={prefectures.iconbutton} onClick={()=>countUp(index, 'bad')}>👎</button>
-										<span>{' '+city.bad}</span>
+										<button className={activeState[index].badactive ? prefectures.iconbutton_on : prefectures.iconbutton_off} onClick={()=>handleDislike(index)}>👎</button>
+										<span className={activeState[index].badactive ? prefectures.count_bad : prefectures.count_off}>{''+city.bad}</span>
 									</th>
                 </tr>
               )

@@ -12,15 +12,34 @@
 }
 
 
-.iconbutton{
+.iconbutton_on{
+	background-color:rgba(255,255,255,0);
+	border-style: none;
+	color:rgba(0,0,0,1);
+}
+
+.iconbutton_off{
 	background-color:rgba(0,0,0,0);
 	border-style: none;
+	color:rgba(0,0,0,0.4);
+	opacity: 0.5;
 }
 
 
+.count_good{
+	color: red
+}
+
+.count_bad{
+	color: blue;
+}
+
+.count_off{
+	color: gray;
+}
 
 @media screen and (max-width: 500px) {
 	.table td, .table th{
-		padding: .25rem;
+		padding: .5rem .25rem .5rem .25rem;
 	}
 }
