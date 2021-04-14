@@ -11,62 +11,28 @@ const Prefectures = () => {
 	const router = useRouter();
 	// パスパラメータから値を取得
 	const { preCode } = router.query;
-	const localStgId = 'good-district' + preCode
-	
-	const countUp = (index, type) =>{
-		const localStgId = cityData[index]['citycode']+type
-		if ((localStorage.getItem(localStgId) === null)) {
-			localStorage.setItem(localStgId, true);
-			const copycity = [...cityData]
-			copycity[index][type]++
-			firebaseDb.ref(preCode).set(copycity);
-			setCityData(copycity)
-		} else {
-				window.alert('１市町村に対して１回押すことができます')
-		}
-	}
+	const prefCode:string = preCode as string
+	const localStgId:string = 'good-district' + preCode
 
-	const setGood = (index) => {
-		const copyData = [...cityData]
-		const copyState = [...activeState]
-		copyData[index].good = copyState[index].goodactive ? copyData[index].good - 1 : copyData[index].good + 1
-		copyState[index].goodactive =  !copyState[index].goodactive
-		firebaseDb.ref(preCode).set(copyData);
-		setCityData(copyData)
-		localStorage.setItem(localStgId, JSON.stringify(copyState));
-		setActiveState(copyState)
-	}
-
-	const setBad = (index) => {
-		const copyData = [...cityData]
-		const copyState = [...activeState]
-		copyData[index].bad = copyState[index].badactive ? copyData[index].bad - 1 : copyData[index].bad + 1
-		copyState[index].badactive =  !copyState[index].badactive
-		firebaseDb.ref(preCode).set(copyData);
-		setCityData(copyData)
-		localStorage.setItem(localStgId, JSON.stringify(copyState));
-		setActiveState(copyState)
-	}
-
-	const setGoodBad = (index, type) => {
+	const setGoodBad = (index:number, type:string) => {
 		const copyData = [...cityData]
 		const copyState = [...activeState]
 		copyData[index][type] = copyState[index][type+'active'] ? copyData[index][type] - 1 : copyData[index][type] + 1
 		copyState[index][type+'active'] =  !copyState[index][type+'active']
-		firebaseDb.ref(preCode).set(copyData);
+		firebaseDb.ref('citydata/'+prefCode).set(copyData);
 		setCityData(copyData)
 		localStorage.setItem(localStgId, JSON.stringify(copyState));
 		setActiveState(copyState)
 	}
 
-	const handleLike = (index) => {
+	const handleLike = (index:number) => {
 		setGoodBad(index,'good')
     if (activeState[index].badactive) {
       setGoodBad(index,'bad')
     }
   }
 
-  const handleDislike = (index) => {
+  const handleDislike = (index:number) => {
 		setGoodBad(index,'bad')
     if (activeState[index].goodactive) {
       setGoodBad(index,'good')
@@ -79,7 +45,7 @@ const Prefectures = () => {
 		// 	const data = await requestCity(preCode)
 		// 	console.log(data)
 		// }
-		firebaseDb.ref(preCode).on("value", (data)=> {
+		firebaseDb.ref('citydata/'+prefCode).on("value", (data)=> {
 			if (data) {
 				//console.log(localStorage.getItem(localStgId))
 				if ((localStorage.getItem(localStgId) === null)) {

@@ -1,262 +1,87 @@
 import Head from 'next/head'
 import Link from 'next/link'
+import React, { useEffect, useState } from "react"
+import { preProcessFile } from 'typescript'
 import styles from '../styles/Home.module.css'
+import { firebaseDb } from '../firebase/index.js'
 
 const Home = () => {
   const PREFECTURES = "/prefectures?preCode="
-  const HOKKAIDOU_TOUHOKU = [
+  const [prefsInfo, setPrefs] = useState({})
+  const prefList = [
     {
-      preCode:'1',
-      name:'北海道',
-      id:'hokkaido',
+      id:'hokkaido_touhoku',
+      name:'北海道・東北',
+      prefsId:['1','2','3','4','5','6','7']
     },
     {
-      preCode:'2',
-      name:'青森',
-      id:'aomori'
-    },
-    {
-      preCode:'3',
-      name:'岩手',
-      id:'iwate'
-    },
-    {
-      preCode:'4',
-      name:'宮城',
-      id:'miyagi'
-    },
-    {
-      preCode:'5',
-      name:'秋田',
-      id:'akita'
-    },
-    {
-      preCode:'6',
-      name:'山形',
-      id:'yamagata'
-    },
-    {
-      preCode:'7',
-      name:'福島',
-      id:'fukushima'
-    },
-  ]
-  const KANTOU = [
-    {
-      preCode:'8',
-      name:'茨城',
-      id:'ibaraki'
-    },
-    {
-      preCode:'9',
-      name:'栃木',
-      id:'tochigi'
-    },
-    {
-      preCode:'10',
-      name:'群馬',
-      id:'gunma',
-    },
-    {
-      preCode:'11',
-      name:'埼玉',
-      id:'saitama'
-    },
-    {
-      preCode:'12',
-      name:'千葉',
-      id:'chiba'
-    },
-    {
-      preCode:'13',
-      name:'東京',
-      id:'tokyo'
-    },
-    {
-      preCode:'14',
-      name:'神奈川',
-      id:'kanagawa'
-    },
-  ]
-  const TYUBU = [
-    {
-      preCode:'15',
-      name:'新潟',
-      id:'nigata',
-    },
-    {
-      preCode:'16',
-      name:'富山',
-      id:'toyama'
-    },
-    {
-      preCode:'17',
-      name:'石川',
-      id:'ishikawa'
-    },
-    {
-      preCode:'18',
-      name:'福井',
-      id:'fukui'
-    },
-    {
-      preCode:'19',
-      name:'山梨',
-      id:'yamanashi'
-    },
-    {
-      preCode:'20',
-      name:'長野',
-      id:'nagano'
-    },
-    {
-      preCode:'21',
-      name:'岐阜',
-      id:'gifu'
-    },
-    {
-      preCode:'22',
-      name:'静岡',
-      id:'shizuoka'
-    },
-    {
-      preCode:'23',
-      name:'愛知',
-      id:'aichi'
-    },
-  ]
-  const KINKI = [
-    {
-      preCode:'24',
-      name:'三重',
-      id:'mie'
-    },
-    {
-      preCode:'25',
-      name:'滋賀',
-      id:'shiga'
-    },
-    {
-      preCode:'26',
-      name:'京都',
-      id:'kyoto',
-    },
-    {
-      preCode:'27',
-      name:'大阪',
-      id:'osaka'
-    },
-    {
-      preCode:'28',
-      name:'兵庫',
-      id:'hyougo'
-    },
-    {
-      preCode:'29',
-      name:'奈良',
-      id:'nara'
-    },
-    {
-      preCode:'30',
-      name:'和歌山',
-      id:'wakayama'
-    },
-  ]
-  const TYUGOKU = [
-    {
-      preCode:'31',
-      name:'鳥取',
-      id:'tottori',
-    },
-    {
-      preCode:'33',
-      name:'岡山',
-      id:'okayama'
-    },
-    {
-      preCode:'32',
-      name:'島根',
-      id:'shimane'
-    },
-    {
-      preCode:'34',
-      name:'広島',
-      id:'hiroshima'
-    },
-    {
-      preCode:'35',
-      name:'山口',
-      id:'yamaguchi'
-    },
-  ]
-  const SHIKOKU = [
-    {
-      preCode:'37',
-      name:'香川',
-      id:'kagawa',
-    },
-    {
-      preCode:'38',
-      name:'愛媛',
-      id:'ehime'
-    },
-    {
-      preCode:'36',
-      name:'徳島',
-      id:'tokushima'
-    },
-    {
-      preCode:'39',
-      name:'高知',
-      id:'kouchi'
-    },
-  ]
-  const KYUSYU = [
-    {
-      preCode:'40',
-      name:'福岡',
-      id:'fukuoka',
-    },
-    {
-      preCode:'41',
-      name:'佐賀',
-      id:'saga'
-    },
-    {
-      preCode:'42',
-      name:'長崎',
-      id:'nagasaki'
-    },
-    {
-      preCode:'44',
-      name:'大分',
-      id:'oita'
-    },
-    {
-      preCode:'43',
-      name:'熊本',
-      id:'kumamoto'
-    },
-    {
-      preCode:'45',
-      name:'宮崎',
-      id:'miyazaki'
-    },
-    {
-      preCode:'46',
-      name:'鹿児島',
-      id:'kagoshima'
-    },
-    {
-      preCode:'47',
-      name:'沖縄',
-      id:'okinawa'
+      id:'kantou',
+      name:'関東',
+      prefsId:['8','9','10','11','12','13','14']
+    }
+    ,{
+      id:'tyubu',
+      name:'中部',
+      prefsId:['15','16','17','18','19','20','21','22','23']
+    }
+    ,{
+      id:'kinki',
+      name:'近畿',
+      prefsId:['24','25','26','27','28','29','30']
+    }
+    ,{
+      id:'tyugoku',
+      name:'中国',
+      prefsId:['31','32','33','34','35']
+    }
+    ,{
+      id:'shikoku',
+      name:'四国',
+      prefsId:['36','37','38','39']
+    }
+    ,{
+      id:'kyusyu',
+      name:'九州・沖縄',
+      prefsId:['40','41','42','43','44','45','46','47']
     }
   ]
+
+  useEffect(() => {
+    firebaseDb.ref('prefecturedata').on("value", (data)=> {
+      const prefecture = data.val()
+      if(prefecture) setPrefs(prefecture)
+    })
+	},[])
+
   return (
     <div className={styles.container}>
       <div className={styles.japan_map}>
-        <div className={styles.hokkaido_touhoku + " " +styles.clearfix}>
+        {
+          prefList.map((prefs)=>{
+            return(
+              <div className={styles[prefs.id] + " " +styles.clearfix}>
+                <p className={styles.area_title}>{prefs.name}</p>
+                <div className={styles.area}>
+                  {
+                    prefs.prefsId.map((prefId)=>{
+                      if(prefsInfo[prefId])
+                      return(
+                        <Link key={prefId} href={PREFECTURES+prefId}>
+                          <a>
+                            <div className={styles[prefsInfo[prefId]['id']]}>
+                              <p>{prefsInfo[prefId]['name']}</p>
+                            </div>
+                          </a>
+                        </Link>
+                      )
+                    })
+                  }
+                </div>
+              </div>
+            )
+          })
+        }
+        {/* <div className={styles.hokkaido_touhoku + " " +styles.clearfix}>
           <p className={styles.area_title}>北海道・東北</p>
           <div className={styles.area}>
             {
@@ -392,7 +217,7 @@ const Home = () => {
               })
             }
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   )
