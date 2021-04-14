@@ -3,7 +3,7 @@ import Link from 'next/link'
 import React, { useEffect, useState } from "react"
 import { preProcessFile } from 'typescript'
 import styles from '../styles/Home.module.css'
-import { firebaseDb } from '../firebase/index.js'
+import { firebaseDb } from '../../firebase/index.js'
 
 const Home = () => {
   const PREFECTURES = "/prefectures?preCode="

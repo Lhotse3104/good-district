@@ -3,9 +3,9 @@ import { useRouter } from "next/router"
 import prefectures from '../styles/Prefectures.module.css'
 import Table from 'react-bootstrap/Table'
 import axios from 'axios'
-import { firebaseDb } from '../firebase/index.js'
+import { firebaseDb } from '../../../firebase/index.js'
 
-const Prefectures = () => {
+const CityRanking = () => {
   const [cityData, setCityData] = useState([])
 	const [activeState, setActiveState] = useState([])
 	const router = useRouter();
@@ -114,10 +114,4 @@ const Prefectures = () => {
   )
 }
 
-Prefectures.getInitialProps = ({query}) => {
-  return {
-		query
-  }
-}
-
-export default Prefectures
+export default CityRanking

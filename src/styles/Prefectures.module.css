@@ -40,6 +40,6 @@
 
 @media screen and (max-width: 500px) {
 	.table td, .table th{
-		padding: .5rem .25rem .5rem .25rem;
+		padding: .5rem .2rem .5rem .2rem;
 	}
 }
