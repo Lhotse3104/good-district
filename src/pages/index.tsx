@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react"
 import { preProcessFile } from 'typescript'
 import styles from '../styles/Home.module.css'
 import { firebaseDb } from '../../firebase/index.js'
+import CityRanking from '../components/CityRanking'
 
 const Home = () => {
   const PREFECTURES = "/prefectures?preCode="
@@ -81,6 +82,9 @@ const Home = () => {
             )
           })
         }
+      </div>
+            <div className={styles.cityrank}>
+        <CityRanking/>
       </div>
     </div>
   )

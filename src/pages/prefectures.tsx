@@ -45,8 +45,8 @@ const Prefectures = () => {
 		// 	const data = await requestCity(preCode)
 		// 	console.log(data)
 		// }
-		firebaseDb.ref('citydata/'+prefCode).on("value", (data)=> {
-			if (data) {
+		const f = async () =>firebaseDb.ref('citydata/'+prefCode).on("value", (data)=> {
+			if (data.val()) {
 				//console.log(localStorage.getItem(localStgId))
 				if ((localStorage.getItem(localStgId) === null)) {
 					const actives = data.val().map(()=>{
@@ -63,6 +63,7 @@ const Prefectures = () => {
 				setCityData(data.val())
 			}
 		});
+		f()
 	},[])
 
 

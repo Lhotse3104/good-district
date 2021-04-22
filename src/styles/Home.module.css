@@ -1,5 +1,5 @@
 .container {
-  min-height: 100vh;
+  min-height: 120vh;
   padding: 0 0.5rem;
   display: flex;
   flex-direction: column;
@@ -114,12 +114,19 @@
   height: 1em;
 }
 
+.cityrank{
+	position: absolute;
+	margin-bottom: 20rem;
+	margin-right: 20rem;
+}
+
 @media (max-width: 600px) {
   .grid {
     width: 100%;
     flex-direction: column;
   }
 }
+
 
 .clearfix:after {
   content: ".";
@@ -590,9 +597,18 @@
 	.kyusyu {
 		height: calc(247px + 4.5em);
 	}
-
+	.cityrank{
+		position:relative;
+		display: flex;
+		margin: 30rem 0rem 0rem 0rem;
+	}
 } /* レスポンシブ max-776px */
 
+@media screen and (max-width: 625px) {
+	.cityrank{
+		margin: 48rem 0rem 0rem 0rem;
+	}
+}
 
 
 @media screen and (max-width: 500px) {
@@ -628,5 +644,8 @@
 		font-size: 16px;
 		width: 100%;
 		padding: 0.5em 0.3em 0.5em 0.3em;
+	}
+	.cityrank{
+		margin: 2rem 0rem 0rem 0rem;
 	}
 } /* レスポンシブ max-500px */
