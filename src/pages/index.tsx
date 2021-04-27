@@ -5,6 +5,7 @@ import { preProcessFile } from 'typescript'
 import styles from '../styles/Home.module.css'
 import { firebaseDb } from '../../firebase/index.js'
 import CityRanking from '../components/CityRanking'
+import Header from '../components/Header'
 
 const Home = () => {
   const PREFECTURES = "/prefectures?preCode="
@@ -48,45 +49,55 @@ const Home = () => {
   ]
 
   useEffect(() => {
-    firebaseDb.ref('prefecturedata').on("value", (data)=> {
+    const ref = firebaseDb.ref('prefecturedata')
+    //マウント時の処理
+    ref.on("value", (data)=> {
       const prefecture = data.val()
       if(prefecture) setPrefs(prefecture)
     })
+    //アンマウント時の処理
+    return()=>{
+      ref.off()
+    }
 	},[])
 
   return (
-    <div className={styles.container}>
-      <div className={styles.japan_map}>
-        {
-          prefList.map((prefs)=>{
-            return(
-              <div key={prefs.id} className={styles[prefs.id] + " " +styles.clearfix}>
-                <p className={styles.area_title}>{prefs.name}</p>
-                <div className={styles.area}>
-                  {
-                    prefs.prefsId.map((prefId)=>{
-                      if(prefsInfo[prefId])
-                      return(
-                        <Link key={prefId} href={PREFECTURES+prefId}>
-                          <a>
-                            <div className={styles[prefsInfo[prefId]['id']]}>
-                              <p>{prefsInfo[prefId]['name']}</p>
-                            </div>
-                          </a>
-                        </Link>
-                      )
-                    })
-                  }
+    <div className={styles.root}>
+      <Header/>
+      <div className={styles.container}>
+        <div className={styles.japan_map}>
+          {
+            prefList.map((prefs)=>{
+              return(
+                <div key={prefs.id} className={styles[prefs.id] + " " +styles.clearfix}>
+                  <p className={styles.area_title}>{prefs.name}</p>
+                  <div className={styles.area}>
+                    {
+                      prefs.prefsId.map((prefId)=>{
+                        if(prefsInfo[prefId])
+                        return(
+                          <Link key={prefId} href={PREFECTURES+prefId}>
+                            <a>
+                              <div className={styles[prefsInfo[prefId]['id']]}>
+                                <p>{prefsInfo[prefId]['name']}</p>
+                              </div>
+                            </a>
+                          </Link>
+                        )
+                      })
+                    }
+                  </div>
                 </div>
-              </div>
-            )
-          })
-        }
-      </div>
-            <div className={styles.cityrank}>
-        <CityRanking/>
+              )
+            })
+          }
+        </div>
+        <div className={styles.cityrank}>
+          <CityRanking/>
+        </div>
       </div>
     </div>
+
   )
 }
 

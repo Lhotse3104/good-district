@@ -4,10 +4,12 @@ import prefectures from '../styles/Prefectures.module.css'
 import Table from 'react-bootstrap/Table'
 import axios from 'axios'
 import { firebaseDb } from '../../firebase/index.js'
+import Header from '../components/Header'
 
 const Prefectures = () => {
   const [cityData, setCityData] = useState([])
 	const [activeState, setActiveState] = useState([])
+	const [prefName, setPrefName] = useState([])
 	const router = useRouter();
 	// パスパラメータから値を取得
 	const { preCode } = router.query;
@@ -66,6 +68,15 @@ const Prefectures = () => {
 		f()
 	},[])
 
+	useEffect(() => {
+		const f = async () =>firebaseDb.ref('prefecturedata/'+prefCode).on("value", (data)=> {
+			if (data.val()) {
+				setPrefName(data.val().name)
+			}
+		});
+		f()
+	},[])
+
 
 	// const requestCity = async (preCode) => {
 	// 	try{
@@ -81,6 +92,8 @@ const Prefectures = () => {
 
   return (
     <div className={prefectures.container}>
+			<Header/>
+			<h3>{prefName}</h3>
 			<Table className={prefectures.table} striped bordered>
 				<thead>
 					<tr className={prefectures.header}>
